@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio de sesión</title>
+    <link rel="stylesheet" href="formularios.css">
+    <link rel="shortcut icon" href="imágenes/iniciar-sesion.png" type="image/x-icon">
+</head>
+<body>
+    <form action="menu_inicio.html">
+        <h1>INICIO DE SESIÓN</h1>
+        <div>
+            <label>Usuario</label>
+            <input type="text" placeholder="USUARIO" required>
+            <br>
+            <label>Correo</label>
+            <input type="email" placeholder="CORREO" required>
+            <br>
+            <p>Seleccione su ciclo formativo</p>
+            <select name="ciclo">
+                <option value="inicial" selected disabled>CICLO</option>
+                <optgroup label="Primero">
+                    <option value="SMR">SMR</option>
+                </optgroup>
+                <optgroup label="Segundo">
+                    <option value="ASIR">ASIR</option>
+                    <option value="DAM">DAM</option>
+                    <option value="DAW">DAW</option>
+                </optgroup>
+            </select>
+            <br>
+            <label>Contraseña</label>
+            <input type="password" placeholder="CONTRASEÑA" required class="contraseña">
+            <br>
+            <label>Vuelva introducir la contraseña</label>
+            <input type="password" placeholder="CONTRASEÑA" required class="contraseña">
+        </div>
+        <br>
+        <br>
+        <div class="terminos">
+            <input type="radio" required><a href="terminos_y_condiciones.html">He leido los términos y condiciones</a>
+        </div>
+        <br>
+        <input type="checkbox"><label>Recordar contraseña<label>
+        <br>
+        <input type="reset" value="RESET">
+        <br>
+        <br>
+        <input type="submit" value="LOGIN">
+    </form>
+</body>
+</html>

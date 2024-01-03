@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="asignaturas.css">
+    <link rel="shortcut icon" href="../imágenes/LOGO.png" type="image/x-icon">
+    <title>SER</title>
+  </head>
+  <body>
+    <a name="inicio"></a>
+        <nav class="menu-fixed">
+            <ul>
+                <li><a href="sor.html" class="asignatura">SOR</a></li>
+                <li><a href="seguridad.html" class="asignatura">Seguridad</a></li>
+                <li><a href="ingles.html" class="asignatura">Inglés</a></li>
+                <li><a href="empresa.html" class="asignatura">Empresa</a></li>
+                <li><a href="../formularios/sugerencias.html" target="_blank">Sugerencias</a></li>
+                <li><a href="#inicio">INICIO</a></li>
+            </ul>
+            <p>
+                <a href="../index.html"><img src="../imágenes/cerrar-sesion.png" class="cerrar-sesion"></a>
+            </p>
+        </nav>
+    <div class="contenido">
+        <div class="indice">
+            <H1>INDICE</H1>
+            <h2><ol>
+                <li><a href="#U1">CONFIGURAR UNA RED</a></li>
+                <li><a href="#U2">SERVICIO DHCP</a></li>
+                <li><a href="#U3">SERVICIO DNS</a></li>
+                <li><a href="#U4">SERVICIO FTP</a></li>
+                <li><a href="#PRACTICAS">PRACTICAS</a></li>
+                <li><a href="#VIDEOS">VIDEOS EXPLICATIVOS</a></li>
+            </ol></h2>
+        </div>
+        <!--UNIDAD 1-->
+        <a name="U1"></a>
+        <div class="titulo"><h1>CONFIGURAR UNA RED</h1></div>
+        <div>
+            <ol>
+                <li><dt>Comprobar los nombres de las interfaces de red del host:</dt><dd>ls -l /sys/class/net</dd></li>
+                
+                <li><dt>Configurar interfaces de red:</dt><dd>sudo nano /etc/network/interfaces</dd></li>
+                
+                <li><dt>Contenido:</dt><dd>auto [nombre de interfaz]</dd><dd>interface [nombre de interfaz] inet static</dd><dd>address [dirección ip]</dd><dd>netmask [máscara de red]</dd></li>
+                
+                <li><dt>Aplicar cambios:</dt><dd>/etc/init.d/networking restart</dd></li>
+                
+                <li><dt>Comprobar estado:</dt><dd>/etc/init.d/networking status</dd></li>
+                
+                <li><dt>Activar ip_forwuarder editando el fichero /etc/sysctl.conf:</dt><dd>Descomentar net.ipv4.ip_forward=1</dd></li>
+                
+                <li><dt>Activar nat:</dt><dd>sudo iptables -t nat -A POSTROUTING -o [nombre de interfaz] -j MASQUERADE</dd></li>
+                
+                <li><dt>Incluir el comando anterior en /etc/rc.local .</dt></li>
+                
+                <li><dt>Configurar la red en otra máquina (ambas máquinas en red interna).</dt></li>
+                
+                <li><dt>Comprobar que se encuentran en la misma red:</dt><dd>ping [ip máquina]</dd></li>
+            </ol>
+        </div>
+    
+        <!--UNIDAD 2-->
+        <a name="U2"></a>
+        <div class="titulo"><h1>CONFIGURAR UN DHCP</h1></div>
+        <div class="ser">
+            <ol>
+                <li>Descargamos el servicio:</li>
+                    <ol type="I">    
+                        <li><dt>Actualizamos los repositorios del sistema</dt><dd>sudo apt-get update</dd></li>
+                        <li><dt>instalamos el servicio DHCP</dt><dd>sudo apt-get install isc-dhcp-server</dd></li>
+                    </ol>
+                <li>Seleccionamos la interfaz de red que vamos a utilizar:</li>
+                    <ol type="I">
+                        <li><dt>Editamos el fichero /etc/default/isc-dhcp-server</dt><dd>Añadimos a "INTERFACES" el nombre de la interfaz</dd></li>
+                    </ol>
+                <li>Definimos la red:</li>
+                    <ol type="I">
+                        <li>
+                            <dt>Añadir al fichero /etc/dhcp/dhcpd.comf</dt>
+                            <dd>subnet [ip de la red] netmask [mascara de red]{</dd>
+                            <dd>&ensp; range [1ª ip del rango] [última ip del rango];</dd>
+                            <dd>&ensp; option domain-name-servers [dirección del DNS];</dd>
+                            <dd>&ensp; option domain-name [nombre del DNS];</dd>
+                            <dd>&ensp; option routers [ip del roputer [en nuestro caso la del servidor]];</dd>
+                            <dd>&ensp; default-lease-time [tiempo de vida predeterminado];</dd>
+                            <dd>&ensp; max-lease-time [tiempo de vida máximo];</dd>
+                            <dd>}</dd>
+                         </li>
+                    </ol>
+                <li>Reiniciamos el servicio:</li>
+                    <dd>/etc/init.d/idc-dhcp-server restart</dd>
+                <li>Comprobamos el estado del servicio:</li>
+                    <dd>/etc/init.d/idc-dhcp-server status</dd>
+                <li>Configuramos un equipo dentro de la misma red para que se le asigne una dirección IP mediante DHCP.</li>
+                <li>Comprobamos que la IP asignada se encuentra dentro del rango asignado:</li>
+                    <dd>ipconfig</dd>
+                <li>Asignamos una direcicón IP fija desde el DHCP:</li>
+                    <ol type="I">
+                        <li>
+                            <dt>Comprobamos la MAC de un ordenador:</dt>
+                            <dd>ipconfig /all</dd>
+                        </li>
+                        <li>
+                            <dt>Editamos el fichero /etc/dhcp/dhcpd.conf:</dt>
+                            <dd>host [un nombre]{</dd>
+                                <dd>&ensp;hardware ethernet [dirección MAC];</dd>
+                                <dd>&ensp;fixed-address [dirección ip];</dd>
+                            <dd>}</dd>
+                        </li>
+                        <li>
+                            <dt>Reiniciamos el servicio:</dt>
+                            <dd>/etc/init.d/isc-dhcp-server restart</dd>
+                        </li>
+                        <li>
+                            <dt>Comprobamos el estado del servicio:</dt>
+                            <dd>/etc/init.d/isc-dhcp-server status</dd>
+                        </li>
+                    </ol>
+                        <li>
+                            <dt>Comprobar que la ip se ha asignado correctamente:</dt>
+                            <dd>ipconfig /renew</dd>
+                        </li>
+                <li>Observar los paquetes que se envían mediante ireshark:</li>
+                    <ol type="I">                        
+                        <li>Discover:</li>
+                            <ul>
+                                <li>Manda un mensaje al broadcast en busca de un servidor DHCP.</li>
+                                <li><dt>Ethernet II:</dt><dd>Manda un mensaje desde la dirección MAC [MAC del host] buscando un servidor DHCP que pueda asignarle una dirección IP.</dd></li>
+                                <li><dt>IP:</dt><dd>Identifica la versión de IP utilizada.</dd></li>
+                                <li>
+                                    <dt>Bootstrap Protocol:</dt><dd>Identifica las características del Discover.</dd>
+                                    <ul type="disc">
+                                        <li><dt>Option 53:</dt><dd>Identifica el tipo de mensage.</dd></li>
+                                        <li><dt>Option 116:</dt><dd>Indica que la IP se autoconfigura.</dd></li>
+                                        <li><dt>Option 61:</dt><dd>Identificador del cliente.</dd></li>
+                                        <li><dt>Option 50:</dt><dd>Indica que IP utilizó por última vez.</dd></li>
+                                        <li><dt>Option 12:</dt><dd>Indica el nombre del equipo.</dd></li>
+                                        <li><dt>Option 60:</dt><dd>Indentificación de clase del proveedor.</dd></li>
+                                        <li><dt>Option 55:</dt><dd>Indica diversos parámetros.</dd></li>
+                                        <li><dt>Option 43:</dt><dd>Información específica del proveedor.</dd></li>
+                                        <li><dt>Option 255:</dt><dd>Indica el final del paquete.</dd></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+    
+                        <li>
+                            <dt>Offer:</dt>
+                                <ul>
+                                    <li>Un servidor DHCP recibe el mensaje y manda una IP que puede usar.</li>
+                                    <li><dt>Ethernet II:</dt><dd>Manda un mensaje desde la dirección MAC [MAC router] buscando un cliente DHCP.</dd></li>
+                                    <li><dt>IP:</dt><dd>Identifica la versión de IP utilizada.</dd></li>
+                                    <li>
+                                        <dt>Bootstrap Protocol:</dt><dd>Identifica las características del Discover.</dd>
+                                        <ul type="disc">
+                                            <li><dt>Option 53:</dt><dd>Identifica el tipo de mensage.</dd></li>
+                                            <li><dt>Option 54:</dt><dd>Identificador del servidor DHCP.</dd></li>
+                                            <li><dt>Option 51:</dt><dd>Tiempo que tarda en volver a mandar una ip.</dd></li>
+                                            <li><dt>Option 1:</dt><dd>Indica la máscara de subred.</dd></li>
+                                            <li><dt>Option 15:</dt><dd>Indica el nombre del dominio.</dd></li>
+                                            <li><dt>Option 3:</dt><dd>Indica la IP del servidor.</dd></li>
+                                            <li><dt>Option 6:</dt><dd>Indica el nombre del servidor.</dd></li>
+                                            <li><dt>Option 255:</dt><dd>Indica el final del paquete.</dd></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                        </li>
+                            
+                        <li>
+                            <dt>Request:</dt>
+                                <ul>
+                                    <li>El host recibe la IP que le ha mandado el servidor y le manda un mensaje de respuesta.</li>
+                                    <li><dt>Ethernet II:</dt><dd>Manda un mensaje desde la dirección MAC [MAC del host] buscando un servidor DHCP.</dd></li>
+                                    <li><dt>IP:</dt><dd>Identifica la versión de IP utilizada.</dd></li>
+                                    <li>
+                                        <dt>Bootstrap Protocol:</dt><dd>Identifica las características del Discover.</dd>
+                                        <ul type="disc">
+                                            <li><dt>Option 53:</dt><dd>Identifica el tipo de mensage.</dd></li>
+                                            <li><dt>Option 61:</dt><dd>Identificador del cliente.</dd></li>
+                                            <li><dt>Option 50:</dt><dd>Indica que IP utilizó por última vez.</dd></li>
+                                            <li><dt>Option 54:</dt><dd>Identificador del servidor DHCP.</dd></li>
+                                            <li><dt>Option 12:</dt><dd>Indica el nombre del equipo.</dd></li>
+                                            <li><dt>Option 81:</dt><dd>Nombre completo del dominio.</dd></li>
+                                            <li><dt>Option 60:</dt><dd>Indentificación de clase del proveedor.</dd></li>
+                                            <li><dt>Option 55:</dt><dd>Indica diversos parámetros.</dd></li>
+                                            <li><dt>Option 43:</dt><dd>Información específica del proveedor.</dd></li>
+                                            <li><dt>Option 255:</dt><dd>Indica el final del paquete.</dd></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                        </li>
+    
+                        <li>
+                            <dt>ACK:</dt>
+                                <ul>
+                                    <li>El servidor DHCP recibe un mensaje de respuesta del host y manda un mensaje de finalización de conversación (este mensaje solo se manda si se ha aceptado la dirección IP).</li>
+                                    <li><dt>Ethernet II:</dt><dd>Manda un mensaje desde la dirección MAC [MAC del host] buscando un servidor DHCP.</dd></li>
+                                    <li><dt>IP:</dt><dd>Identifica la versión de IP utilizada.</dd></li>
+                                    <li>
+                                        <dt>Bootstrap Protocol:</dt><dd>Identifica las características del Discover.</dd>
+                                        <ul type="disc">
+                                            <li><dt>Option 53:</dt><dd>Identifica el tipo de mensage.</dd></li>
+                                            <li><dt>Option 54:</dt><dd>Identificador del servidor DHCP.</dd></li>
+                                            <li><dt>Option 51:</dt><dd>Tiempo que tarda en volver a mandar una ip.</dd></li>
+                                            <li><dt>Option 1:</dt><dd>Indica la máscara de subred.</dd></li>
+                                            <li><dt>Option 15:</dt><dd>Indica el nombre del dominio.</dd></li>
+                                            <li><dt>Option 3:</dt><dd>Indica la IP del servidor.</dd></li>
+                                            <li><dt>Option 6:</dt><dd>Indica el nombre del servidor.</dd></li>
+                                            <li><dt>Option 255:</dt><dd>Indica el final del paquete.</dd></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                        </li>
+                    </ol>
+            </ol>
+        </div>
+    
+        <!--UNIDAD 3-->
+        <a name="U3"></a>
+        <div class="titulo"><h1>CONFIGURAR UN DNS</h1></div>
+        <div class="ser">
+            <ol>
+                <li><dt>Instalamos el servicio Bind9:</dt><dd>sudo apt-get install bind9</dd></li>
+                <li><dt>Lo configuramos como servidor caché:</dt><dd>Se configra automáticamente.</dd></li>
+                <li><dt>Comprobamnos que funciona correctamente:</dt><dd>nslookup localhost</dd></li>
+                <li><dt>Configuramos el DHCP para que utilice el servici que acabamos de instalar como DNS por defecto:<dt>
+                    <dd>subnet [ip de la red] netmask [mascara de red]{</dd>
+                        <dd>&ensp; range [1ª ip del rango] [última ip del rango];</dd>
+                        <dd>&ensp; option domain-name-servers [dirección del servidor];</dd>
+                        <dd>&ensp; option domain-name [nombre del DNS];</dd>
+                        <dd>&ensp; option routers [ip del roputer [en nuestro caso la del servidor]];</dd>
+                        <dd>&ensp; default-lease-time [tiempo de vida predeterminado];</dd>
+                        <dd>&ensp; max-lease-time [tiempo de vida máximo];</dd>
+                    <dd>}</dd>
+                </li>
+                <li><dt>Reiniciamos el servicio:</dt><dd>/etc/init.d/bind9 restart</dd></li>
+                <li><dt>Comprobamos el estado del servicio:</dt><dd>/etc/init.d/bind9 status</dd></li>
+                <li>
+                    <dt>Editamos el fichero /etc/bind/named.conf.options y descomentamos forwarders y le indicamos el que queremos.</dt>
+                    <dd>forwarders{</dd>
+                    <dd> &ensp; [dirección del servidor que quieremos que sea usado];</dd>
+                    <dd>}</dd>
+                </li>
+                <li><dt>Reiniciamos el servicio:</dt><dd>/etc/init.d/bind9 restart</dd></li>
+                <li><dt>Comprobamos el estado del servicio:</dt><dd>/etc/init.d/bind9 status</dd></li>
+                <li>
+                    <dt>Comprobamos que el forwarder funciona:</dt>
+                    <dd>dig [primer dominio] [IP ervidor root]</dd>
+                    <dd>dig [segundo dominio] [primera IP resultante del dig anterior] (Repetir los pasos hasta que no salgan direcciones y salgan dominios)</dd>
+                    <dd>dig [primer dominio completo] [IP ervidor root]</dd>
+                    <dd>dig [dominio original] [IP resultante del dig anterior] (obtendremos una única dirección IP)</dd>
+                </li>
+                <li>
+                    <dt>Creamos la zona directa editando el fichero /etc/bind9/named.conf.local:</dt>
+                    <dd>zone "[nombre de la zona]"{</dd>
+                        <dd>&ensp;type master;</dd>
+                        <dd>&ensp;file "[nombre del fichero en el que se almacena la información de la zona directa]";</dd>
+                    <dd>}</dd>
+                </li>
+                <li><dt>Copaiamos el fichero /etc/bind9/db.empty y le damos el nombre que hemos indicado en el apartado anterior.</dt></li>
+                <li>
+                    <dt>Editamos el fichero que acabamos de crear:</dt>
+                    <dd>@   IN   SOA   ns1.[nombre de dominio].   [usuario].[nombre de dominio].(</dd>
+                    <dd>)</dd>
+                    <dd>[dominio]   IN   NS   ns1.[nombre de dominio].</dd>
+                    <dd>[dominio]   IN   A   [IP del dominio]</dd>
+                    <dd>www   IN   CNAME   [nombre del dominio]</dd>
+                </li>
+            </ol>
+                        <div class="significado">
+                            <ul>
+                                <li>Significado de los parámetros</li>
+                                <dl>
+                                    <dt>SOA:</dt><dd>Registro de autoridad.</dd><dd>Almacena la información de un dominio o zona.</dd>
+                                    <dt>IN:</dt><dd>Indica la arquitectura de protocolos utilizada.</dd>
+                                    <dt>NS:</dt><dd>Determina los servidores que comunicacn la información del DNS.</dd>
+                                    <dt>A:</dt><dd>Vincula un dominio con una dirección IPv4.</dd>
+                                    <dt>AAAA:</dt><dd>Vincula un dominio con una dirección IPv6.</dd>
+                                    <dt>CNAME:</dt><dd>Enlaza el nombre de un dominio con un alias.</dd>
+                                </dl>
+                            </ul>
+                        </div>
+            <ol start="14">
+                <li><dt>Reiniciamos el servicio:</dt><dd>/etc/init.d/bind9 restart</dd></li>
+                <li><dt>Comprobamos el estado del servicio:</dt><dd>/etc/init.d/bind9 status</dd></li>
+                <li><dt>Realizamos 2 consultas al ervidor, una dentro de nustra red y otra fuera:</dt><dd>nslookup [nombre de dominio] [dirección IP del servidor]</dd></li>
+                <li>
+                    <dt>Creamos la zona directa editando el fichero /etc/bind9/named.conf.local:</dt>
+                    <dd>zone "[nombre de la zona]"{</dd>
+                        <dd>&ensp;type master;</dd>
+                        <dd>&ensp;file "[nombre del fichero en el que se almacena la información de la zona directa]";</dd>
+                    <dd>}</dd>
+                </li>
+                <li><dt>Copaiamos el fichero /etc/bind9/db.empty y le damos el nombre que hemos indicado en el apartado anterior.</dt></li>
+                <li>
+                    <dt>Editamos el fichero que acabamos de crear:</dt>
+                    <dd>@   IN   SOA   ns1.[nombre de dominio].   [usuario].[nombre de dominio].(</dd>
+                    <dd>)</dd>
+                    <dd>[IP puesta al reves sib el últinmo octerto]-addr.arpa.   IN   NS   ns1.[nombre de dominio].</dd>
+                    <dd>[dominio]   IN   PTR   [Nombre del dominio]</dd>
+                </li>
+            </ol>
+                        <div class="significado">
+                            <ul>
+                                <li>Significado de los parámetros</li>
+                                <dl>
+                                    <dt>SOA:</dt><dd>Registro de autoridad.</dd><dd>Almacena la información de un dominio o zona.</dd>
+                                    <dt>IN:</dt><dd>Indica la arquitectura de protocolos utilizada.</dd>
+                                    <dt>NS:</dt><dd>Determina los servidores que comunicacn la información del DNS.</dd>
+                                    <dt>PTR:</dt><dd>Vincula una dirección IPv4 con un nombre de dominio.</dd>
+                                </dl>
+                            </ul>
+                        </div>
+            <ol start="20">
+                <li><dt>Reiniciamos el servicio:</dt><dd>/etc/init.d/bind9 restart</dd></li>
+                <li><dt>Comprobamos el estado del servicio:</dt><dd>/etc/init.d/bind9 status</dd></li>
+                <li><dt>Realizamos consultas al servidor:</dt><dd>nslookup [IP dominio] [IP servidor]</dd></li>
+            </ol>
+        </div>
+
+
+
+        <!--UNIDAD 4-->
+        <a name="U4"></a>
+        <div class="titulo"><h1>CONFIGURAR UN FTP</h1></div>
+        <div class="ser">
+            <ol>
+                <li><dt>Actualizamos los repositorios del sistema:</dt><dd>sudo apt-get update</dd></li>
+                <li><dt>Instalamos el servicio:</dt><dd>Sudo apt-get install vsfptd.</dd></li>
+                <li><dt>Iniciamos el servicio:</dt><dd>/etc/init.d/vsftpd start</dd></li>
+                <li><dt>Entramos con un Windows XP:<dt><dd>ftp [ip del servidor]</dd></li>
+                <li><dt>Habilitamos el modo anónimo:</dt><dd>Entramos en el documento /etc/vsfpt.conf y descomentamos "anonymous_enable=yes".</dd></li>
+                <li><dt>Reiniciamos el servicio:</dt><dd>/etc/init.d/vssftpd restart</dd></li>
+                <li><dt>Comprobamos el estado del servicio:</dt><dd>/etc/init.d/vssftpd status</dd></li>
+                <li><dt>Comprobamos desde un equipo con Windows xp que se ha habilitado</dt><dd>ftp [ip del servidor]</dd><dd>anonimous</dd></li>
+                <li><dt>Habilitamos subir archivos en modo autentificado:</dt><dd>Editamos el fichero /etc/vsftpd.conf y descomentamos:</dd>
+                    <dd>&ensp; local_enable=yes</dd>
+                    <dd>&ensp; write_enable=yes</dd>
+                    <dd>&ensp;local_umask=022</dd>
+                </li>
+                <li><dt>Reiniciamos el servicio:</dt><dd>/etc/init.d/vsftpd restart</dd></li>
+                <li><dt>Comprobamos el estado del servicio:</dt><dd>/etc/init.d/vsftpd status</dd></li>
+                <li><dt>Comprobamos desde otro equipo e intentamos subir un fichero al servidor:</dt><dd>ftp [ip del servidor]</dd><dd>[Usuario]</dd><dd>put [fichero]</dd></li>
+                <li><dt>Creamos las carpetas y los ficheros que los usuarios verán cuando entren en modo anónimo:</dt><dd>mkdir /srv/ftp/[directorio]</dd><dd>mkdir /srv/ftp/[directorio]</dd></li>
+                <li><dt>Comprobamos que se han añadido desde otro equipo</dt><dd>ftp [ip del servidor]</dd><dd>anonimous</dd><dd>ls</dd></li>
+                <li><dt>Editamos el fichero /etc/vsftpd.conf y descomentamos:</dt><dd>chrot_local_users=yes</dd><dd>allow_writeable_chroot=yes</dd><dd>chroot_list_enable_yes</dd><dd>chroot_list_file=/etc/vsftpd.chroot_list</dd></li>
+                <li><dt>Reiniciamos el servicio:</dt><dd>/etc/init.d/vsftpd restart</dd></li>
+                <li><dt>Comprobamos el estado del servicio:</dt><dd>/etc/init.d/vsftpd status</dd></li>
+                <li><dt>Introducimos en el fichero /etc/vsftpd.chroot_list los usuarios que queremos que tengan libertad de movimiento</dt><dd>Creamos un usuario</dd><dd>&ensp; sudo adduser [usuario]</dd><dd>Añadimos el usuario al fichero.</dd></li>
+                <li><dt>Reiniciamos el servicio:</dt><dd>/etc/init.d/vsftpd restart</dd></li>
+                <li><dt>Comprobamos el estado del servicio:</dt><dd>/etc/init.d/vsftpd status</dd></li>
+                <li><dt>Comprobamos que se ha aplicado desde otro equipo</dt><dd>ftp [ip del servidor]</dd><dd>[usuario enjaulado (no se ha introducido en el fichero)]</dd><dd>pwd (tiene que salir que se encuentra en un directorio raid)</dd></li>
+                <li><dt>Entramos en modo activo:</dt><dd>ftp [ip del servidor]</dd><dd>[usuario]</dd><dd>Comprobamos que los puertos utilizados son 21 y 20</dd></li>
+                <li><dt>Entramos en modo pasivo:</dt><dd>Entramos desde Fillecilla</dd><dd>[usuario]</dd><dd>Comprobamos que los puertos utilizados son 20 y uno superior al 1023</dd></li>
+   
+    <!--PRACTICAS-->
+    <a name="PRACTICAS"></a>
+    <div class="titulo"><h1>ABRIR PRACTICAS</h1></div>
+    <div class="descarga">
+        <table>
+            <tr>
+                <th align="center">Practica</th>
+                <th align="center">Word</th>
+                <th align="center">PDF</th>
+            </tr>
+                <tr>
+                    <td>Configurar una red</td>
+                    <td><a href="../Practicas/u1p3-victor_rodriguez.odt">Configurar una red</a></td>
+                    <td><a href="../Practicas/u1p3-victor_rodriguez.pdf">Configurar una red</a></td>
+                </tr>
+                <tr>
+                    <td>Servidor DHCP</td>
+                    <td><a href="../Practicas/u2p1-servicios_en_red-victor_rodriguez.odt">Configurar un DHCP</a></td>
+                    <td><a href="../Practicas/u2p1-servicios_en_red-victor_rodriguez.pdf">Configurar un DHCP</a></td>
+                </tr>
+                <tr>
+                    <td>Servidor DNS</td>
+                    <td><a href="../Practicas/configuración_DNS-victor_rodriguez-CORREGIDO.odt">Configurar un DNS</a></td>
+                    <td><a href="../Practicas/configuración_DNS-victor_rodriguez-CORREGIDO.pdf">Configurar un DNS</a></td>
+                </tr>
+            </table>
+        </div>
+    
+        <!--VIDEOS-->
+        <a name="VIDEOS"></a>
+        <div class="titulo"><h1>VIDEOS EXPLICATIVOS</h1></div>
+        <!--Copiar código de inserción-->
+        <div class="videos">
+            <p><iframe width="804" height="419" src="https://www.youtube.com/embed/9MDKzDHtjts" title="DHCP Server - Cómo configurar un servidor DHCP sobre un router Cisco - Packet Tracer" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></p>
+        </div>
+        <div class="video">
+            <p>Vídeo explicativo de servicio DNS</p>
+        </div>
+    </div>
+  </body>
+</html>

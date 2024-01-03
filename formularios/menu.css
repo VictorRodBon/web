@@ -1,0 +1,27 @@
+/*menú inicial*/
+.container{
+    width: 100%;
+    margin:0px;
+}
+
+.menu button{
+    font-size: 5em;
+    font-weight: bold;
+    padding: 10px 40px;
+    border-radius: 10px;
+    border: 4px solid rgb(38, 38, 38);
+    color:white;
+    background-color: blueviolet;
+    width: 100%;
+    height: 20%;
+}
+
+.menu button:hover{
+    background-color: rgb(86, 24, 145);
+}
+
+body{
+    font-family: Arial;
+    font-size: 1.25em;
+    margin: 0%;
+}

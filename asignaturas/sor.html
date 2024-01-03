@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOR</title>
+    <link rel="stylesheet" href="asignaturas.css">
+    <link rel="shortcut icon" href="../imágenes/SOR/LOGO.png" type="image/x-icon">
+</head>
+<body>
+    <a name="inicio"></a>
+    <nav class="menu-fixed">
+        <ul>
+            <li><a href="ser.html">SER</a></li>
+            <li><a href="seguridad.html">Seguridad</a></li>
+            <li><a href="ingles.html">Inglés</a></li>
+            <li><a href="empresa.html">Empresa</a></li>
+            <li><a href="formularios/sugerencias.html" target="_blank">Sugerencias</a></li>
+            <li><a href="#inicio">INICIO</a></li>
+        </ul>
+        <a href="../index.html"><img src="../imágenes/cerrar-sesion.png" class="cerrar-sesion"></a>
+        <p>
+        </p>
+    </nav>
+    <div class="contenido">
+        <div class="indice">
+            <H1>INDICE</H1>
+            <ol>
+                <li><a href="#instalacion-w2012">Instalación Windows Server 2012</a></li>
+                <li><a href="#desatendida">Instalación desatendida</a></li>
+            </ol>
+        </div>
+        <!--Instalación Wserver-->
+        <a name="instalacion-w2012"></a>
+        <div class="titulo"><h1>INSTALACIÓN WINDOWS SERVER</h1></div>
+        <ol>
+            <li>
+                Descargar ISO de instalación.
+            </li>
+            <li>Prepara una máqina virtual con las siguientes indicaciones:</li>
+            <div class="carrusel">
+                <img src="../imágenes/SOR/1.png" class="slider">
+                <img src="../imágenes/SOR/2.png" class="slider">
+                <img src="../imágenes/SOR/3.png" class="slider">
+            </div>
+            <li>Arrancar la máquina</li>
+            <li>Instalamos el sistema operativo</li>
+            <div class="carrusel">
+                <img src="../imágenes/SOR/4.png" class="slider">
+                <img src="../imágenes/SOR/5.png" class="slider">
+                <img src="../imágenes/SOR/6.png" class="slider">
+                <img src="../imágenes/SOR/7.png" class="slider">
+                <img src="../imágenes/SOR/8.png" class="slider">
+                <img src="../imágenes/SOR/9.png" class="slider">
+            </div>
+            <li>Una vez terminada la instalación, iniciamos la máquina y le cambiamos el nombre al servidor</li>
+            <div class="carrusel">
+                <img src="../imágenes/SOR/10.png">
+            </div>
+            <li>instalamos el servidor DHCP</li>
+            <div class="borde">
+                <div class="carrusel">
+                    <img src="../imágenes/SOR/11.png" class="slider">
+                    <img src="../imágenes/SOR/12.png" class="slider">
+                    <img src="../imágenes/SOR/13.png" class="slider">
+                    <img src="../imágenes/SOR/14.png" class="slider">
+                    <img src="../imágenes/SOR/15.png" class="slider">
+                    <img src="../imágenes/SOR/16.png" class="slider">
+                </div>
+            </div>
+            <li>Creaamos una máquina virtual con las siguientes características:
+            </li>
+            <div class="carrusel">
+                <img src="../imágenes/SOR/17.png" class="slider">
+            </div>
+        </ol>
+        <!--Desatendida-->
+        <a name="desatendida"></a>
+        <div class="titulo"><h1>INSTALACIÓN WINDOWS SERVER</h1></div>
+        <ol>
+            <li>Creamos una máquina virtual para Windows 7</li>
+            <li>Insertamos CD con erramientas AIK</li>
+            <li>Creamos una carpeta en C:\ con nombre "FicherosDVDW7"</li>
+            <li>Insertamos la ISO con el Sistema Operativo del que queremos automatizar la instalación, en nuestro caso la ISO del Windows 7 ultimate</li>
+            <li>Abrimos el programa "Administración de Imágenes del Sistema Windows"</li>
+            <li>Clicamos en "Seleccione una imágen de Windows o un archívo de catálogo", clicamos en "Seleccionar una imagen Windows", nos dirigimos a la carpeta que hemos creado anteriormente, entramos en el directorio "Sources" y seleccionamos el fichero "install.win".</li>
+            <li>Seleccionamos el sistrema del que queremos hacer la instalación desatendida (Windows 7 ULTIMATE).</li>
+            <li>Creamos un archivo de catálogo</li>
+            <li>Nos situamos en la sección "Archivo de respuesta" y creamos un "Nuevo archivo de respuestas".</li>
+            <li>En "Components" seleccionamos seleccionamos “Amd64_Microsoft-Windows-International-Core-WinPE_6.1.7600.16385_neutral”, hacemos clic derecho  y agregamos la configuración a ciclo 1 windowsPE.</li>
+            <li>Seleccionamos en Components, Amd64_Microsoft-Windows-Setup_6.1.76000.16385_neutral, botón derecho Agregar configuración a ciclo 1 windowsPE.</li>
+            <li>Seleccionamos en Components, Amd64_Microsoft-Windows-Shell-Setup_6.1.7601.17514_neutral, botón derecho Agregar configuración a ciclo 7 oobeSystem.</li>
+            <li>Seleccionamos en Components, Amd64_Microsoft-Windows-Shell-Setup_6.1.7601.17514_neutral, botón derecho Agregar configuración a ciclo 4 specialize.</li>
+            <li>Seleccionamos el idioma.</li>
+            <li>Hacemos clic derecho en "DiskConfiguration" y seleccionamos "Insertar Nuevo Disk"</li>
+            <li>Le damos al disco los siguientes valores:</li>
+            <div class="significado">
+                <ul>
+                    <li>Significado de los parámetros</li>
+                    <dl>
+                        <dt>addListItem:</dt><dd>Agregue una nueva configuración personalizada a la lista.</dd>
+                        <dt>WillWipeDisk:</dt><dd>Especifica si se borrarán todas las particiones y los datos del disco duro antes de agregar configuraciones adicionales al disco.</dd>
+                        <dt>DiskID:</dt><dd>indica el número de disco.</dd>
+                    </dl>
+                </ul>
+            </div>
+        </ol>
+</body>
+</html>
